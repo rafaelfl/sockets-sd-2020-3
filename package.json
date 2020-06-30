@@ -1,24 +1,20 @@
 {
-  "name": "sockets-sd-2020-3",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Projeto usando sockets em Node.JS",
   "main": "src/server.js",
+  "license": "MIT",
   "scripts": {
-    "start": "nodemon src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/server.js",
+    "build": "sucrase ./src -d ./dist --transforms imports"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rafaelfl/sockets-sd-2020-3.git"
-  },
-  "author": "Rafael Fernandes Lopes",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rafaelfl/sockets-sd-2020-3/issues"
-  },
-  "homepage": "https://github.com/rafaelfl/sockets-sd-2020-3#readme",
-  "dependencies": {},
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "eslint": "^7.3.1",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.0.5",
+    "sucrase": "^3.15.0"
   }
 }

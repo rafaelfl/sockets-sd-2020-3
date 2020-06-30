@@ -1,54 +1,60 @@
 const net = require('net');
 
-// função que trata todos os eventos da conexão no servidor
-function trataRequisicoes (socket) {
-    // imprime mensagem ao conectar
-    console.log("Conexão realizada!");
+const cardapio = [
+  {
+    id: 0,
+    item: 'Feijoada',
+    valor: 40,
+  },
+  {
+    id: 1,
+    item: 'Paçoca',
+    valor: 15,
+  },
+  {
+    id: 2,
+    item: 'Farofa',
+    valor: 10,
+  },
+  {
+    id: 3,
+    item: 'Peixada',
+    valor: 60,
+  },
+];
+const pedidos = [];
 
-    // código que executa quando a conexão é encerrada
-    socket.on("end", function () {
-        console.log("Conexão finalizada!");
-    });
+function realizarPedido(socket) {
+  socket.on('data', function (dados) {
+    const opcao = parseInt(dados);
 
-    // código que executa quando dados são recebidos
-    socket.on("data", function (dados) {
-        const comando = dados.toString();
+    let total = 0;
 
-        // testa quais os tipos de comandos válidos recebidos
-        switch (comando) {
-            case "MENSAGEM1":
-                socket.write("Bom dia!\n");
-                break;
+    for (let i = 0; i < pedidos.length; i++) {
+      total += pedidos[i].valor;
+    }
 
-            case "MENSAGEM2":
-                socket.write("Boa tarde\n")
-                break;
+    pedidos.push(cardapio[opcao]);
 
+    socket.write(pedidos);
+    socket.write(total);
+  });
+  socket.on('data', function (dados) {
+    const opcao = parseInt(dados);
 
-            case "MENSAGEM3":
-                socket.write("Boa noite\n");
-                break;
-
-            case "FIM":
-                socket.end();
-                break;
-
-            
-            default:
-                const c = comando.split(" ");
-
-                if (c[0] === "MENSAGEM") {
-                    socket.write("Bom dia " + c[1]);
-                } else {
-                    socket.write("COMANDO DESCONHECIDO");
-                }
-                
-        }
-    });
+    if (opcao > cardapio.length) {
+      return false;
+    }
+    if (opcao < 0) {
+      return false;
+    }
+    cardapio.splice(opcao, 1);
+    return true;
+  });
 }
 
-// cria servidor
-const server = net.createServer(trataRequisicoes);
+const server = net.createServer(realizarPedido);
 
-// escuta em porta de rede
-server.listen(2000, "127.0.0.1");
+server.listen(2000, '127.0.0.1', () => {
+  console.log('Servidor rodando na porta 2000 🚀');
+});
